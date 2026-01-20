@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Insight = require("../models/Insights.JS");
+const Insight = require("../models/Insights.js");
 
 router.get("/kpis", async (req, res) => {
   try {
@@ -85,12 +85,16 @@ router.get("/filter", async (req, res) => {
     const query = {};
 
     if (startYear) {
-      query.start_year = { $gte: Number(startYear) };
-    }
+  query.end_year = { $gte: String(startYear) };
+}
 
-    if (endYear) {
-      query.end_year = { $lte: Number(endYear) };
-    }
+if (endYear) {
+  query.end_year = {
+    ...(query.end_year || {}),
+    $lte: String(endYear),
+  };
+}
+
 
     const data = await Insight.find(query).limit(200);
 
